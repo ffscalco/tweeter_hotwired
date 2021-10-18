@@ -3,7 +3,7 @@ class TweetsController < ApplicationController
 
   # GET /tweets or /tweets.json
   def index
-    @tweets = Tweet.all.reverse
+    @tweets = Tweet.all.order(created_at: :desc)
     @tweet = Tweet.new
   end
 
@@ -30,7 +30,7 @@ class TweetsController < ApplicationController
         format.json { render :show, status: :created, location: @tweet }
       else
         format.turbo_stream { render turbo_stream: turbo_stream.replace(@tweet, partial: "tweets/form", locals: { tweet: @tweet}) }
-        @tweets = Tweet.all.reverse
+        @tweets = Tweet.all.order(created_at: :desc)
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @tweet.errors, status: :unprocessable_entity }
       end
@@ -45,7 +45,7 @@ class TweetsController < ApplicationController
         format.json { render :show, status: :ok, location: @tweet }
       else
         format.turbo_stream { render turbo_stream: turbo_stream.replace(@tweet, partial: "tweets/form", locals: { tweet: @tweet}) }
-        @tweets = Tweet.all.reverse
+        @tweets = Tweet.all.order(created_at: :desc)
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @tweet.errors, status: :unprocessable_entity }
       end
@@ -57,6 +57,7 @@ class TweetsController < ApplicationController
     @tweet.destroy
     respond_to do |format|
       format.html { redirect_to tweets_url, notice: "Tweet was successfully destroyed." }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@tweet) }
       format.json { head :no_content }
     end
   end
