@@ -6,4 +6,7 @@
 <%= render "tweets/form", tweet: @tweet %>
 
 <h4>Tweet Feed</h4>
-<%= render @tweets %>
+<%= turbo_stream_from "tweets" %>
+<%= turbo_frame_tag "tweets" do %>
+  <%= render @tweets %>
+<% end %>
