@@ -2,8 +2,11 @@ class RetweetsController < ApplicationController
   before_action :set_tweet
 
   def create
-    @tweet.increment! :retweets
-    redirect_to tweets_url
+    @tweet.increment!(:retweets).save
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(@tweet, partial: "tweets/tweet", locals: { tweet: @tweet}) }
+      @tweets = Tweet.all.order(created_at: :desc)
+    end
   end
 
   private
