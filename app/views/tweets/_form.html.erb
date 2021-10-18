@@ -1,4 +1,4 @@
-<div class="card card-body">
+<div class="card card-body" id="<%= dom_id(tweet) %>">
   <%= form_with(model: tweet, id: dom_id(tweet)) do |form| %>
     <% if tweet.errors.any? %>
       <div id="error_explanation">
